@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Mesa;
 use App\Models\Disponibilidad;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MesaController extends Controller
 {
@@ -24,13 +25,23 @@ class MesaController extends Controller
 
     public function store(Request $request)
     {
+         // Obtener el usuario autenticado
+        $usuario = JWTAuth::parseToken()->authenticate();
+
+        if (!$usuario->restaurante_id) {
+            return response()->json(['error' => 'El usuario no tiene un restaurante asociado.'], 403);
+        }
+
         $request->validate([
             'numero_mesa' => 'required|integer|unique:mesa,numero_mesa', // Cambia 'mesas' por 'mesa'
             'capacidad' => 'required|integer|min:1',
-            'restaurante_id' => 'required|exists:restaurantes,restaurante_id',
         ]);
     
-        $mesa = Mesa::create($request->all());
+        $mesa = Mesa::create([
+            'numero_mesa' => $request->numero_mesa,
+            'capacidad' => $request->capacidad,
+            'restaurante_id' => $usuario->restaurante_id,
+        ]);
     
         return response()->json([
             'message' => 'Mesa creada exitosamente',

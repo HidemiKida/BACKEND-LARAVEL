@@ -71,8 +71,6 @@ class CompraController extends Controller
             $usuario->restaurante_id = $restaurante->restaurante_id;
             $usuario->save();
 
-            // Registrar en los logs
-            \Log::info('Compra realizada del servicio ' . $servicio->servicio_id);
 
             return response()->json([
                 'message' => 'Compra realizada con éxito',
@@ -84,4 +82,3 @@ class CompraController extends Controller
         }
     }
 }
-
