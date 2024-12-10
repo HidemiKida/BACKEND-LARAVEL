@@ -57,6 +57,15 @@ class CompraController extends Controller
                 'email' => null,
                 'descripcion' => null,
             ]);
+            
+            $rolAdmin = Role::find(2);
+            if (!$rolAdmin) {
+                return response()->json(['error' => 'El rol de administrador no existe en la base de datos.'], 400);
+            }
+
+            // Asignar el rol al usuario
+            $usuario->role_id = $rolAdmin->role_id;
+            $usuario->save();
 
             // Asignar el restaurante al usuario
             $usuario->restaurante_id = $restaurante->restaurante_id;
