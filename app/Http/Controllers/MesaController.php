@@ -20,6 +20,8 @@ class MesaController extends Controller
     /**
      * Crear una nueva mesa.
      */
+
+    
     public function store(Request $request)
     {
         $request->validate([
