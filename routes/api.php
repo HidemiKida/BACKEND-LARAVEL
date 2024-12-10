@@ -64,7 +64,12 @@ Route::prefix('superadmin')
     });
 
 
+<<<<<<< HEAD
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout']) ->middleware([\App\Http\Middleware\CheckRole::class]);
     Route::get('/me', [AuthController::class, 'me']);
+=======
+Route::post('/register', [AuthController::class, 'register']);
+
+>>>>>>> 3eda9b02e716ba1422133b401fdf9d2a20e5d4e2
 

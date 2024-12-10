@@ -38,9 +38,13 @@ class RestauranteController extends Controller
 
         $request->validate([
             'nombre_restaurante' => 'required|string|max:100',
+            'direccion' => 'nullable|string|max:50',
+            'telefono' => 'nullable|string|max:50',
+            'email' => 'nullable|string|email|max:100',
+            'descripcion' => 'nullable|string|max:250',
         ]);
 
-        $restaurante = Restaurante::create($request->only('nombre_restaurante'));
+        $restaurante = Restaurante::create($request->only(['nombre_restaurante', 'direccion', 'telefono', 'email', 'descripcion']));
 
         // Asignar el restaurante al usuario si tiene el rol 2
         if ($user->role_id == 2) {
@@ -71,9 +75,13 @@ class RestauranteController extends Controller
 
         $request->validate([
             'nombre_restaurante' => 'required|string|max:100',
+            'direccion' => 'required|string|max:50',
+            'telefono'=>'required|string|max:50',
+            'email' => 'required|string|email|max:100',
+            'descripcion' => 'required|string|max:250',
         ]);
 
-        $restaurante->update($request->only('nombre_restaurante'));
+        $restaurante->update($request->only(['nombre_restaurante', 'direccion', 'telefono', 'email', 'descripcion']));
 
         return response()->json([
             'message' => 'Restaurante actualizado exitosamente',
