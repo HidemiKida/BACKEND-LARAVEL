@@ -10,6 +10,7 @@ class Reserva extends Model
     use HasFactory;
 
     protected $primaryKey = 'reserva_id';
+    protected $table ='reserva';  // Nombre de la tabla en la BD, si es diferente al nombre del modelo en CamelCase
     protected $fillable = ['usuario_id', 'mesa_id', 'fecha_reserva', 'estado'];
 
     public function usuario()

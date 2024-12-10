@@ -66,6 +66,6 @@ Route::prefix('superadmin')
 
     });
 
-Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [AuthController::class, 'register']);
 
 

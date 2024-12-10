@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Reserva;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\Mesa;
 
 class ReservaController extends Controller
 {
