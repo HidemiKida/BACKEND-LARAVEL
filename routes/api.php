@@ -62,6 +62,8 @@ Route::prefix('superadmin')
         
         Route::get('restaurante/', [RestauranteController::class, 'index']);
 
+        Route::post('/reservas', [ReservaController::class, 'store']);
+
     });
 
 Route::post('/register', [AuthController::class, 'register']);

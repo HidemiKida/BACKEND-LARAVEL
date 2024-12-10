@@ -30,6 +30,41 @@ class ReservaController extends Controller
         return response()->json($reserva, 200);
     }
 
+    /**
+     * Crear una nueva reserva.
+     */
+    public function store(Request $request)
+    {
+        $usuario = JWTAuth::parseToken()->authenticate();
+
+        // Validar los datos de la solicitud
+        $validatedData = $request->validate([
+            'mesa_id' => 'required|exists:mesa,mesa_id',
+            'fecha_reserva' => 'required|date|after_or_equal:today',
+        ]);
+
+        // Verificar si la mesa pertenece al restaurante seleccionado
+        $mesa = Mesa::findOrFail($request->mesa_id);
+
+        // Verificar si la mesa ya está reservada en la fecha indicada
+        $reservaExistente = Reserva::where('mesa_id', $mesa->mesa_id)
+            ->where('fecha_reserva', $request->fecha_reserva)
+            ->first();
+
+        if ($reservaExistente) {
+            return response()->json(['message' => 'La mesa ya está reservada para esta fecha.'], 400);
+        }
+
+        // Crear la reserva
+        $reserva = new Reserva();
+        $reserva->usuario_id = $usuario->usuario_id;
+        $reserva->mesa_id = $mesa->mesa_id;
+        $reserva->fecha_reserva = $request->fecha_reserva;
+        $reserva->estado = 'pendiente'; // Puedes usar un estado inicial
+        $reserva->save();
+
+        return response()->json(['message' => 'Reserva realizada con éxito', 'reserva' => $reserva], 201);
+    }
    
     /**
      * Actualizar una reserva.
