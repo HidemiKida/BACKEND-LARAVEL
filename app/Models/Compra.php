@@ -10,6 +10,7 @@ class Compra extends Model
     use HasFactory;
 
     protected $primaryKey = 'compra_id'; // Clave primaria
+    protected $table = 'compra';
     protected $fillable = ['usuario_id', 'tarjeta_id', 'monto', 'fecha_compra']; // Campos asignables en masa
 
     /**

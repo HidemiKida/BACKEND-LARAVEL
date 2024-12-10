@@ -11,12 +11,16 @@ use App\Http\Controllers\RestauranteController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\CompraServicioController;
+use App\Http\Controllers\CompraController;
 
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout'])->middleware('jwt.auth');
-Route::get('/me', [LoginController::class, 'me'])->middleware('jwt.auth');
+Route::post('/comprar', [CompraController::class, 'store'])
+     ->middleware(['auth:api']); // Asegúrate de que la ruta esté protegida por autenticación JWT
 
+
+
+    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/logout', [LoginController::class, 'logout'])->middleware('jwt.auth');
+    Route::get('/me', [LoginController::class, 'me'])->middleware('jwt.auth');
 
 Route::prefix('superadmin')
     ->middleware(\App\Http\Middleware\CheckRole::class) // Protege las rutas con JWT y el middleware CheckRole
@@ -25,7 +29,6 @@ Route::prefix('superadmin')
         Route::get('restaurante/', [RestauranteController::class, 'index']);
         // Obtener un restaurante específico
         Route::get('restaurante/{id}', [RestauranteController::class, 'show']);
-        
         // Eliminar un restaurante
         Route::delete('restaurante/{id}', [RestauranteController::class, 'destroy']);
         Route::patch('usuarios/{usuario_id}/cambiar-rol', [RoleController::class, 'cambiarRol']);
@@ -33,16 +36,12 @@ Route::prefix('superadmin')
     Route::middleware(['auth:api'])->group(function () {
         Route::post('/restaurantes', [RestauranteController::class, 'store']);
         Route::put('/restaurantes/{id}', [RestauranteController::class, 'update']);
-        // compra del servicio y gestion
-        Route::post('/comprar-servicio', [CompraServicioController::class, 'comprarServicio']);
-        Route::get('/historial-compras', [CompraServicioController::class, 'historialCompras']);
-        Route::get('/ver-usuarios', [CompraServicioController::class, 'verUsuarios']);
-        Route::post('/gestionar-servicio', [CompraServicioController::class, 'gestionarServicio']);
+        
     });
 
+   
 
-    Route::prefix('admin')
-    ->middleware(\App\Http\Middleware\CheckRoleadmin::class) // Protege las rutas con JWT y el middleware CheckRole
+    Route::prefix('admin')->middleware(\App\Http\Middleware\CheckRoleadmin::class) // Protege las rutas con JWT y el middleware CheckRole
     ->group(function () {
         Route::apiResource('mesas', MesaController::class);
         Route::put('/mesas/{mesa_id}', [MesaController::class, 'update']);
@@ -56,15 +55,21 @@ Route::prefix('superadmin')
         Route::delete('/reservas/{reserva_id}', [ReservaController::class, 'destroy']);
         Route::patch('/reservas/{reserva_id}/estado', [ReservaController::class, 'cambiarEstado']);
     });
-Route::prefix('cliente')->group(function () {
-    // Registro de cliente
-    Route::post('register', [UsuarioController::class, 'register']);
-    // Información del cliente autenticado
-    Route::get('me', [UsuarioController::class, 'me'])
-        ->middleware('auth:api');  // Middleware para asegurar que el cliente esté autenticado
-});
+    Route::prefix('cliente')->group(function () {
+        // Registro de cliente
+        Route::post('register', [UsuarioController::class, 'register']);
+        // Información del cliente autenticado
+        Route::get('me', [UsuarioController::class, 'me'])
+            ->middleware('auth:api');  // Middleware para asegurar que el cliente esté autenticado
+    });
 
 
+<<<<<<< HEAD
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/logout', [AuthController::class, 'logout']) ->middleware([\App\Http\Middleware\CheckRole::class]);
+    Route::get('/me', [AuthController::class, 'me']);
+=======
 Route::post('/register', [AuthController::class, 'register']);
 
+>>>>>>> 3eda9b02e716ba1422133b401fdf9d2a20e5d4e2
 

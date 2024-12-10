@@ -29,7 +29,7 @@ class Usuario extends Authenticatable implements JWTSubject // Implementa la int
     {
         return $this->hasMany(Reserva::class, 'usuario_id');
     }
-    public function compras()
+    public function compra()
     {
         return $this->hasMany(Compra::class, 'usuario_id');
     }
