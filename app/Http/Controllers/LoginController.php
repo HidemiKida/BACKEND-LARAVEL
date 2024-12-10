@@ -39,11 +39,15 @@ class LoginController extends Controller
             default => 'Iniciaste sesión como Usuario.',
         };
 
+        $userDetails = [
+            'role_id' => $user->role_id,
+        ];
+
         // Respuesta con token y rol
         return response()->json([
             'message' => 'Inicio de sesión exitoso.',
             'rol_message' => $mensajeRol,
-            'user' => $user,
+            'user' => $userDetails,
             'token' => $token,
         ], 200);
     }
