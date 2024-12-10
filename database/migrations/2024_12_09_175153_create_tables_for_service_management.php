@@ -30,7 +30,7 @@ class CreateTablesForServiceManagement extends Migration
             });
 
         // Tabla de compras
-        Schema::create('compras', function (Blueprint $table) {
+        Schema::create('compra', function (Blueprint $table) {
             $table->id('compra_id');
             $table->unsignedBigInteger('usuario_id'); // Usuario que realizó la compra
             $table->unsignedBigInteger('tarjeta_id'); // Tarjeta utilizada
@@ -51,7 +51,7 @@ class CreateTablesForServiceManagement extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('compras');
+        Schema::dropIfExists('compra');
         Schema::dropIfExists('tarjeta_creditos');
         Schema::dropIfExists('servicios');
     }

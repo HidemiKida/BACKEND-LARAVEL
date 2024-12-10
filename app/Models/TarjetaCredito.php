@@ -15,7 +15,7 @@ class TarjetaCredito extends Model
     /**
      * Relación con compras
      */
-    public function compras()
+    public function compra()
     {
         return $this->hasMany(Compra::class, 'tarjeta_id');
     }
