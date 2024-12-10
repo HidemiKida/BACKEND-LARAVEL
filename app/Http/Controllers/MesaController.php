@@ -14,8 +14,18 @@ class MesaController extends Controller
      */
     public function index()
     {
-        $mesa = Mesa::with('disponibilidad')->get();
-        return response()->json($mesa, 200);
+         // Obtener el usuario autenticado
+        $usuario = JWTAuth::parseToken()->authenticate();
+
+        if (!$usuario->restaurante_id) {
+            return response()->json(['error' => 'El usuario no tiene un restaurante asociado.'], 403);
+        }
+        
+        $mesas = Mesa::with('disponibilidad')
+                ->where('restaurante_id', $usuario->restaurante_id)
+                ->get();
+
+        return response()->json($mesas, 200);
     }
 
     /**
@@ -81,7 +91,7 @@ class MesaController extends Controller
         ]);
     
         // Actualizar la mesa con los datos proporcionados
-        $mesa->update($request->only(['numero_mesa', 'capacidad', 'restaurante_id'])); // Usar solo los campos que esperamos actualizar
+        $mesa->update($request->only(['numero_mesa', 'capacidad'])); // Usar solo los campos que esperamos actualizar
     
         // Devolver la respuesta con la mesa actualizada
         return response()->json([
