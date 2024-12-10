@@ -11,7 +11,7 @@ class Restaurante extends Model
 
     protected $primaryKey = 'restaurante_id';
     protected $table = 'restaurantes';
-    protected $fillable = ['nombre_restaurante'];
+    protected $fillable = ['nombre_restaurante','direccion','telefono','email','descripcion'];
 
     public function usuarios()
     {

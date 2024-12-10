@@ -66,6 +66,5 @@ Route::prefix('cliente')->group(function () {
 
 
 Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout']) ->middleware([\App\Http\Middleware\CheckRole::class]);
-Route::get('/me', [AuthController::class, 'me']);
+
 
