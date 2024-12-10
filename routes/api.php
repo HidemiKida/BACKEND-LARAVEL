@@ -59,6 +59,8 @@ Route::prefix('superadmin')
         Route::get('me', [UsuarioController::class, 'me'])
             ->middleware('auth:api');  // Middleware para asegurar que el cliente esté autenticado
         Route::post('/comprar', [CompraController::class, 'store']);
+        
+        Route::get('restaurante/', [RestauranteController::class, 'index']);
 
     });
 
