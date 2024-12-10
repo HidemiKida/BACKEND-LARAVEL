@@ -31,6 +31,8 @@ class MesaController extends Controller
     /**
      * Crear una nueva mesa.
      */
+
+
     public function store(Request $request)
     {
          // Obtener el usuario autenticado
