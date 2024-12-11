@@ -138,4 +138,28 @@ class MesaController extends Controller
     return response()->json(['message' => 'Disponibilidad de la mesa actualizada exitosamente'], 200);
 }
 
+
+public function mesasPorRestaurante($restaurante_id)
+{
+    // Obtener el usuario autenticado
+    $usuario = JWTAuth::parseToken()->authenticate();
+
+    // Verificar que el usuario tenga el rol 1 (cliente)
+    if ($usuario->role_id != 1) {
+        return response()->json(['error' => 'No tienes permisos para acceder a esta información.'], 403);
+    }
+
+    // Buscar las mesas del restaurante especificado
+    $mesas = Mesa::where('restaurante_id', $restaurante_id)
+        ->get();
+
+    // Si no hay mesas para el restaurante, devolver un mensaje
+    if ($mesas->isEmpty()) {
+        return response()->json(['message' => 'No hay mesas disponibles para este restaurante.'], 404);
+    }
+
+    // Devolver las mesas asociadas al restaurante
+    return response()->json($mesas, 200);
+}
+
 }
