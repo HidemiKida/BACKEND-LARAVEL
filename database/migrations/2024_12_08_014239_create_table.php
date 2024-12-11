@@ -43,19 +43,10 @@ return new class extends Migration
             $table->integer('numero_mesa');
             $table->integer('capacidad');
             $table->string('ubicacion');
+            $table->boolean('estado_mesa');
             $table->unsignedBigInteger('restaurante_id');
             $table->timestamps();
             $table->foreign('restaurante_id')->references('restaurante_id')->on('restaurantes')->onDelete('cascade');
-        });
-
-        Schema::create('disponibilidad', function (Blueprint $table) {
-            $table->id('disponibilidad_id'); 
-            $table->unsignedBigInteger('mesa_id');
-            $table->date('fecha_disponible');
-            $table->time('hora_inicio');
-            $table->time('hora_fin');
-            $table->timestamps();
-            $table->foreign('mesa_id')->references('mesa_id')->on('mesa')->onDelete('cascade');
         });
 
         Schema::create('reserva', function (Blueprint $table) {
@@ -63,19 +54,12 @@ return new class extends Migration
             $table->unsignedBigInteger('usuario_id');
             $table->unsignedBigInteger('mesa_id');
             $table->timestamp('fecha_reserva'); 
-            $table->string('estado', 20)->default('pendiente'); 
+            $table->boolean('estado'); 
             $table->timestamps();
             $table->foreign('usuario_id')->references('usuario_id')->on('usuarios')->onDelete('cascade');
             $table->foreign('mesa_id')->references('mesa_id')->on('mesa')->onDelete('cascade');
         });
 
-        Schema::create('permiso', function (Blueprint $table) {
-            $table->id('permiso_id'); 
-            $table->unsignedBigInteger('role_id');
-            $table->string('accion', 50);
-            $table->timestamps();
-            $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('cascade');
-        });
     }
 
     /**
