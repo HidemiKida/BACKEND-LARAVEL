@@ -52,6 +52,8 @@ Route::prefix('superadmin')
         Route::delete('/reservas/{reserva_id}', [ReservaController::class, 'destroy']);
         Route::patch('/reservas/{reserva_id}/estado', [ReservaController::class, 'cambiarEstado']);
         Route::get('/restaurante/asociado', [RestauranteController::class, 'showRestauranteAsociado']);
+        Route::put('/restaurante/actualizarasociado', [RestauranteController::class, 'updateRestauranteAsociado']);
+
     });
     Route::prefix('cliente')->group(function () {
         // Registro de cliente
