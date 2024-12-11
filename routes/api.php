@@ -13,6 +13,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CompraController;
+use App\Http\Controllers\AdminController;
+
 
 // Asegúrate de que la ruta esté protegida por autenticación JWT
 
@@ -51,6 +53,9 @@ Route::prefix('superadmin')
         Route::put('/reservas/{reserva_id}', [ReservaController::class, 'update']);
         Route::delete('/reservas/{reserva_id}', [ReservaController::class, 'destroy']);
         Route::patch('/reservas/{reserva_id}/estado', [ReservaController::class, 'cambiarEstado']);
+        Route::get('/restaurante/asociado', [RestauranteController::class, 'showRestauranteAsociado']);
+        Route::put('/restaurante/actualizarasociado', [RestauranteController::class, 'updateRestauranteAsociado']);
+
     });
     Route::prefix('cliente')->group(function () {
         // Registro de cliente
@@ -62,7 +67,9 @@ Route::prefix('superadmin')
         
         Route::get('restaurante/', [RestauranteController::class, 'index']);
 
+        Route::post('/reservas', [ReservaController::class, 'store']);
+
     });
 
-Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [AuthController::class, 'register']);
 

@@ -43,13 +43,17 @@ class MesaController extends Controller
         }
 
         $request->validate([
-            'numero_mesa' => 'required|integer|unique:mesa,numero_mesa', // Cambia 'mesas' por 'mesa'
+            'numero_mesa' => 'required|integer', // Cambia 'mesas' por 'mesa'
             'capacidad' => 'required|integer|min:1',
+            'ubicacion' => 'required|string|max:255',
+            'estado_mesa' => 'required|boolean'
         ]);
     
         $mesa = Mesa::create([
             'numero_mesa' => $request->numero_mesa,
             'capacidad' => $request->capacidad,
+            'ubicacion' => $request->ubicacion,
+            'estado_mesa'=> $request->estado_mesa,
             'restaurante_id' => $usuario->restaurante_id,
         ]);
     
@@ -90,10 +94,11 @@ class MesaController extends Controller
         $request->validate([
             'numero_mesa' => 'integer|unique:mesa,numero_mesa,' . $mesa->mesa_id . ',mesa_id',  // Corregido aquí, agregando 'mesa_id' como referencia
             'capacidad' => 'integer|min:1',
+            'ubicacion' => 'required|string|max:255',
         ]);
     
         // Actualizar la mesa con los datos proporcionados
-        $mesa->update($request->only(['numero_mesa', 'capacidad'])); // Usar solo los campos que esperamos actualizar
+        $mesa->update($request->only(['numero_mesa', 'capacidad', 'ubicacion'])); // Usar solo los campos que esperamos actualizar
     
         // Devolver la respuesta con la mesa actualizada
         return response()->json([
@@ -118,49 +123,4 @@ class MesaController extends Controller
         return response()->json(['message' => 'Mesa eliminada exitosamente'], 200);
     }
 
-    /**
-     * Agregar disponibilidad a una mesa.
-     */
-    public function agregarDisponibilidad(Request $request, $mesa_id)
-    {
-        $mesa = Mesa::find($mesa_id);
-
-        if (!$mesa) {
-            return response()->json(['message' => 'Mesa no encontrada'], 404);
-        }
-
-        $request->validate([
-            'fecha_disponible' => 'required|date',
-            'hora_inicio' => 'required|date_format:H:i',
-            'hora_fin' => 'required|date_format:H:i|after:hora_inicio',
-        ]);
-
-        $disponibilidad = Disponibilidad::create([
-            'mesa_id' => $mesa_id,
-            'fecha_disponible' => $request->fecha_disponible,
-            'hora_inicio' => $request->hora_inicio,
-            'hora_fin' => $request->hora_fin,
-        ]);
-
-        return response()->json([
-            'message' => 'Disponibilidad agregada exitosamente',
-            'disponibilidad' => $disponibilidad
-        ], 201);
-    }
-
-    /**
-     * Eliminar disponibilidad de una mesa.
-     */
-    public function eliminarDisponibilidad($disponibilidad_id)
-    {
-        $disponibilidad = Disponibilidad::find($disponibilidad_id);
-
-        if (!$disponibilidad) {
-            return response()->json(['message' => 'Disponibilidad no encontrada'], 404);
-        }
-
-        $disponibilidad->delete();
-
-        return response()->json(['message' => 'Disponibilidad eliminada exitosamente'], 200);
-    }
 }
