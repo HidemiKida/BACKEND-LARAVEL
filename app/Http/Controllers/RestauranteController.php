@@ -28,6 +28,38 @@ class RestauranteController extends Controller
         return response()->json($restaurante);
     }
 
+    // Actualizar los datos del restaurante
+    public function updateRestauranteAsociado(Request $request)
+{
+    $user = Auth::user();
+
+    // Verificar que el usuario tenga el rol 2
+    if ($user->role_id != 2) {
+        return response()->json(['message' => 'No tienes permisos para actualizar esta información'], 403);
+    }
+
+    // Buscar el restaurante asociado al usuario
+    $restaurante = Restaurante::find($user->restaurante_id);
+
+    if (!$restaurante) {
+        return response()->json(['message' => 'No tienes un restaurante asociado'], 404);
+    }
+
+    // Validar los datos del formulario
+    $validatedData = $request->validate([
+        'nombre_restaurante' => 'required|string|max:255',
+        'direccion' => 'required|string|max:255',
+        'telefono' => 'required|string|max:15',
+        'email' => 'required|email|max:255',
+        'descripcion' => 'nullable|string|max:1000',
+    ]);
+
+    // Actualizar los datos del restaurante
+    $restaurante->update($validatedData);
+
+    return response()->json(['message' => 'Restaurante actualizado correctamente', 'restaurante' => $restaurante]);
+}
+
     // Mostrar todos los restaurantes
     public function index()
     {

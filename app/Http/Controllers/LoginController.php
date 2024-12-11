@@ -41,6 +41,7 @@ class LoginController extends Controller
 
         $userDetails = [
             'role_id' => $user->role_id,
+            'restaurante_id' => $user->restaurante_id,
         ];
 
         // Respuesta con token y rol
