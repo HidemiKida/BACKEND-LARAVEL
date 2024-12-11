@@ -13,6 +13,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CompraController;
+use App\Http\Controllers\AdminController;
 
 // Asegúrate de que la ruta esté protegida por autenticación JWT
 
@@ -34,16 +35,15 @@ Route::prefix('superadmin')
     Route::middleware(['auth:api'])->group(function () {
         Route::post('/restaurantes', [RestauranteController::class, 'store']);
         Route::put('/restaurantes/{id}', [RestauranteController::class, 'update']);
-        
+
     });
-  
+
 
     Route::prefix('admin')->middleware(\App\Http\Middleware\CheckRoleadmin::class) // Protege las rutas con JWT y el middleware CheckRole
     ->group(function () {
         Route::apiResource('mesas', MesaController::class);
         Route::put('/mesas/{mesa_id}', [MesaController::class, 'update']);
-        Route::post('mesas/{mesa_id}/disponibilidad', [MesaController::class, 'agregarDisponibilidad']);
-        Route::delete('disponibilidad/{disponibilidad_id}', [MesaController::class, 'eliminarDisponibilidad']);
+        Route::patch('/mesas/{mesa_id}/disponibilidad', [MesaController::class, 'cambiarDisponibilidad']);
     // Reservas
         Route::get('/reservas', [ReservaController::class, 'index']);
         Route::get('/reservas/{reserva_id}', [ReservaController::class, 'show']);
@@ -53,7 +53,8 @@ Route::prefix('superadmin')
         Route::patch('/reservas/{reserva_id}/estado', [ReservaController::class, 'cambiarEstado']);
         Route::get('/restaurante/asociado', [RestauranteController::class, 'showRestauranteAsociado']);
         Route::put('/restaurante/actualizarasociado', [RestauranteController::class, 'updateRestauranteAsociado']);
-
+    //Cientes
+        Route::get('usuarios-con-reservas', [AdminController::class, 'obtenerUsuariosConReservas']);
     });
     Route::prefix('cliente')->group(function () {
         // Registro de cliente
@@ -62,7 +63,7 @@ Route::prefix('superadmin')
         Route::get('me', [UsuarioController::class, 'me'])
             ->middleware('auth:api');  // Middleware para asegurar que el cliente esté autenticado
         Route::post('/comprar', [CompraController::class, 'store']);
-        
+
         Route::get('restaurante/', [RestauranteController::class, 'index']);
 
         Route::post('/reservas', [ReservaController::class, 'store']);
@@ -70,4 +71,3 @@ Route::prefix('superadmin')
     });
 
     Route::post('/register', [AuthController::class, 'register']);
-
