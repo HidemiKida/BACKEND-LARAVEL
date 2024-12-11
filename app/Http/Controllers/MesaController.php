@@ -123,18 +123,19 @@ class MesaController extends Controller
     /**
      * Cambiar la disponibilidad de una mesa.
      */
-    public function cambiarDisponibilidad($mesa_id, $disponibilidad)
-    {
-        $mesa = Mesa::find($mesa_id);
+    public function cambiarDisponibilidad($mesa_id, Request $request)
+{
+    $mesa = Mesa::find($mesa_id);
 
-        if (!$mesa) {
-            return response()->json(['message' => 'Mesa no encontrada'], 404);
-        }
-
-        $mesa->disponibilidad = $disponibilidad;
-        $mesa->save();
-
-        return response()->json(['message' => 'Disponibilidad de la mesa actualizada exitosamente'], 200);
+    if (!$mesa) {
+        return response()->json(['message' => 'Mesa no encontrada'], 404);
     }
+
+    $disponibilidad = $request->input('disponibilidad'); // Obtén el valor del cuerpo de la solicitud
+    $mesa->disponibilidad = $disponibilidad;
+    $mesa->save();
+
+    return response()->json(['message' => 'Disponibilidad de la mesa actualizada exitosamente'], 200);
+}
 
 }
