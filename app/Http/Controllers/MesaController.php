@@ -43,7 +43,7 @@ class MesaController extends Controller
         }
 
         $request->validate([
-            'numero_mesa' => 'required|integer|unique:mesa,numero_mesa', // Cambia 'mesas' por 'mesa'
+            'numero_mesa' => 'required|integer', // Cambia 'mesas' por 'mesa'
             'capacidad' => 'required|integer|min:1',
         ]);
     
