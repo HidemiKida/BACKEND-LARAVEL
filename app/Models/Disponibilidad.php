@@ -11,7 +11,7 @@ class Disponibilidad extends Model
 
     protected $primaryKey = 'disponibilidad_id';
     protected $table = 'disponibilidad';
-    protected $fillable = ['mesa_id', 'fecha_disponible', 'hora_inicio', 'hora_fin'];
+    protected $fillable = ['mesa_id', 'fecha_disponible', 'hora_inicio', 'hora_fin', 'estado_disponibilidad'];
 
     public function mesa()
     {

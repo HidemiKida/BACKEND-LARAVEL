@@ -11,7 +11,7 @@ class Mesa extends Model
 
     protected $primaryKey = 'mesa_id';
     protected $table = 'mesa';
-    protected $fillable = ['numero_mesa', 'capacidad', 'restaurante_id'];
+    protected $fillable = ['numero_mesa', 'capacidad', 'ubicacion','restaurante_id'];
 
     public function restaurante()
     {

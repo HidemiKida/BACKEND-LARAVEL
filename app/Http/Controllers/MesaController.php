@@ -45,11 +45,13 @@ class MesaController extends Controller
         $request->validate([
             'numero_mesa' => 'required|integer|unique:mesa,numero_mesa', // Cambia 'mesas' por 'mesa'
             'capacidad' => 'required|integer|min:1',
+            'ubicacion' => 'required|string|max:255',
         ]);
     
         $mesa = Mesa::create([
             'numero_mesa' => $request->numero_mesa,
             'capacidad' => $request->capacidad,
+            'ubicacion' => $request->ubicacion,
             'restaurante_id' => $usuario->restaurante_id,
         ]);
     
@@ -90,10 +92,11 @@ class MesaController extends Controller
         $request->validate([
             'numero_mesa' => 'integer|unique:mesa,numero_mesa,' . $mesa->mesa_id . ',mesa_id',  // Corregido aquí, agregando 'mesa_id' como referencia
             'capacidad' => 'integer|min:1',
+            'ubicacion' => 'required|string|max:255',
         ]);
     
         // Actualizar la mesa con los datos proporcionados
-        $mesa->update($request->only(['numero_mesa', 'capacidad'])); // Usar solo los campos que esperamos actualizar
+        $mesa->update($request->only(['numero_mesa', 'capacidad', 'ubicacion'])); // Usar solo los campos que esperamos actualizar
     
         // Devolver la respuesta con la mesa actualizada
         return response()->json([

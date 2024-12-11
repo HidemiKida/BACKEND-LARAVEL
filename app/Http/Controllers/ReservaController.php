@@ -3,33 +3,53 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reserva;
+use App\Models\Mesa;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Models\Mesa;
 
 class ReservaController extends Controller
 {
-    /**
-     * Mostrar todas las reservas.
-     */
     public function index()
     {
-        $reservas = Reserva::with(['usuario', 'mesa'])->get();
-        return response()->json($reservas, 200);
-    }
+        // Obtener el usuario autenticado
+        $usuario = JWTAuth::parseToken()->authenticate();
 
-    /**
-     * Mostrar una reserva específica.
-     */
-    public function show($reserva_id)
-    {
-        $reserva = Reserva::with(['usuario', 'mesa'])->find($reserva_id);
-
-        if (!$reserva) {
-            return response()->json(['message' => 'Reserva no encontrada'], 404);
+        // Verificar que el usuario sea administrador
+        if ($usuario->role_id !== 2) {
+            return response()->json(['error' => 'Acceso no autorizado'], 403);
         }
 
-        return response()->json($reserva, 200);
+        // Obtener las reservas asociadas al restaurante del administrador
+        $reservas = Reserva::whereHas('mesa', function ($query) use ($usuario) {
+            $query->where('restaurante_id', $usuario->restaurante_id);
+        })->with(['usuario', 'mesa'])->get();
+
+        return response()->json($reservas);
+    }
+
+    public function show($reserva_id)
+    {
+        // Obtener el usuario autenticado
+        $usuario = JWTAuth::parseToken()->authenticate();
+
+        // Verificar que el usuario sea administrador
+        if ($usuario->role_id !== 2) {
+            return response()->json(['error' => 'Acceso no autorizado'], 403);
+        }
+
+        // Buscar la reserva y verificar que pertenece al restaurante del administrador
+        $reserva = Reserva::where('reserva_id', $reserva_id)
+            ->whereHas('mesa', function ($query) use ($usuario) {
+                $query->where('restaurante_id', $usuario->restaurante_id);
+            })
+            ->with(['usuario', 'mesa'])
+            ->first();
+
+        if (!$reserva) {
+            return response()->json(['error' => 'Reserva no encontrada o no pertenece a su restaurante'], 404);
+        }
+
+        return response()->json($reserva);
     }
 
     /**
@@ -68,69 +88,59 @@ class ReservaController extends Controller
         return response()->json(['message' => 'Reserva realizada con éxito', 'reserva' => $reserva], 201);
     }
    
-    /**
-     * Actualizar una reserva.
-     */
+  
     public function update(Request $request, $reserva_id)
     {
-        $reserva = Reserva::find($reserva_id);
+        // Obtener el usuario autenticado
+        $usuario = JWTAuth::parseToken()->authenticate();
+
+        // Verificar que el usuario sea administrador
+        if ($usuario->role_id !== 2) {
+            return response()->json(['error' => 'Acceso no autorizado'], 403);
+        }
+
+        $reserva = Reserva::where('reserva_id', $reserva_id)
+            ->whereHas('mesa', function ($query) use ($usuario) {
+                $query->where('restaurante_id', $usuario->restaurante_id);
+            })
+            ->first();
 
         if (!$reserva) {
-            return response()->json(['message' => 'Reserva no encontrada'], 404);
+            return response()->json(['error' => 'Reserva no encontrada o no pertenece a su restaurante'], 404);
         }
 
         $request->validate([
-            'usuario_id' => 'exists:usuarios,usuario_id',
-            'mesa_id' => 'exists:mesa,mesa_id',
-            'fecha_reserva' => 'date|after:today',
-            'estado' => 'in:pendiente,confirmada,cancelada',
+            'estado' => 'required|string',
         ]);
 
-        $reserva->update($request->only(['usuario_id', 'mesa_id', 'fecha_reserva', 'estado']));
+        $reserva->update($request->all());
 
-        return response()->json([
-            'message' => 'Reserva actualizada exitosamente',
-            'reserva' => $reserva
-        ], 200);
+        return response()->json(['message' => 'Reserva actualizada con éxito', 'reserva' => $reserva]);
     }
 
-    /**
-     * Eliminar una reserva.
-     */
     public function destroy($reserva_id)
     {
-        $reserva = Reserva::find($reserva_id);
+        // Obtener el usuario autenticado
+        $usuario = JWTAuth::parseToken()->authenticate();
+
+        // Verificar que el usuario sea administrador
+        if ($usuario->role_id !== 2) {
+            return response()->json(['error' => 'Acceso no autorizado'], 403);
+        }
+
+        $reserva = Reserva::where('reserva_id', $reserva_id)
+            ->whereHas('mesa', function ($query) use ($usuario) {
+                $query->where('restaurante_id', $usuario->restaurante_id);
+            })
+            ->first();
 
         if (!$reserva) {
-            return response()->json(['message' => 'Reserva no encontrada'], 404);
+            return response()->json(['error' => 'Reserva no encontrada o no pertenece a su restaurante'], 404);
         }
 
         $reserva->delete();
 
-        return response()->json(['message' => 'Reserva eliminada exitosamente'], 200);
-    }
-
-    /**
-     * Cambiar el estado de una reserva.
-     */
-    public function cambiarEstado(Request $request, $reserva_id)
-    {
-        $reserva = Reserva::find($reserva_id);
-
-        if (!$reserva) {
-            return response()->json(['message' => 'Reserva no encontrada'], 404);
-        }
-
-        $request->validate([
-            'estado' => 'required|in:pendiente,confirmada,cancelada',
-        ]);
-
-        $reserva->estado = $request->estado;
-        $reserva->save();
-
-        return response()->json([
-            'message' => 'Estado de la reserva actualizado',
-            'reserva' => $reserva
-        ], 200);
+        return response()->json(['message' => 'Reserva eliminada con éxito']);
     }
 }
+

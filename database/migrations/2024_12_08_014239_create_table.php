@@ -42,6 +42,7 @@ return new class extends Migration
             $table->id('mesa_id'); 
             $table->integer('numero_mesa');
             $table->integer('capacidad');
+            $table->string('ubicacion');
             $table->unsignedBigInteger('restaurante_id');
             $table->timestamps();
             $table->foreign('restaurante_id')->references('restaurante_id')->on('restaurantes')->onDelete('cascade');
