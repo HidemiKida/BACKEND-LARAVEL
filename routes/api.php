@@ -44,6 +44,7 @@ Route::prefix('superadmin')
         Route::put('/mesas/{mesa_id}', [MesaController::class, 'update']);
         Route::post('mesas/{mesa_id}/disponibilidad', [MesaController::class, 'agregarDisponibilidad']);
         Route::delete('disponibilidad/{disponibilidad_id}', [MesaController::class, 'eliminarDisponibilidad']);
+        Route::patch('/mesas/{mesa_id}/disponibilidad', [MesaController::class, 'cambiarDisponibilidad']);
     // Reservas
         Route::get('/reservas', [ReservaController::class, 'index']);
         Route::get('/reservas/{reserva_id}', [ReservaController::class, 'show']);
