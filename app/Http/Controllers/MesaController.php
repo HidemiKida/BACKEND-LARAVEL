@@ -40,7 +40,9 @@ class MesaController extends Controller
         $request->validate([
             'numero_mesa' => 'required|integer',
             'capacidad' => 'required|integer|min:1',
+
             'disponibilidad' => 'required|boolean',
+
         ]);
     
         $mesa = Mesa::create([
@@ -87,11 +89,13 @@ class MesaController extends Controller
         $request->validate([
             'numero_mesa' => 'integer|unique:mesa,numero_mesa,' . $mesa->mesa_id . ',mesa_id',
             'capacidad' => 'integer|min:1',
+
             'disponibilidad' => 'boolean',
         ]);
     
         // Actualizar la mesa con los datos proporcionados
         $mesa->update($request->only(['numero_mesa', 'capacidad', 'disponibilidad']));
+
     
         // Devolver la respuesta con la mesa actualizada
         return response()->json([
@@ -132,4 +136,5 @@ class MesaController extends Controller
 
         return response()->json(['message' => 'Disponibilidad de la mesa actualizada exitosamente'], 200);
     }
+
 }

@@ -15,6 +15,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\AdminController;
 
+
 // Asegúrate de que la ruta esté protegida por autenticación JWT
 
     Route::post('/login', [LoginController::class, 'login']);

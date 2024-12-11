@@ -42,13 +42,15 @@ return new class extends Migration
             $table->id('mesa_id'); 
             $table->integer('numero_mesa');
             $table->integer('capacidad');
+
             $table->boolean('disponibilidad')->default(true);
+
             $table->unsignedBigInteger('restaurante_id');
             $table->timestamps();
             $table->foreign('restaurante_id')->references('restaurante_id')->on('restaurantes')->onDelete('cascade');
         });
 
-        
+
         Schema::create('reserva', function (Blueprint $table) {
             $table->id('reserva_id'); 
             $table->unsignedBigInteger('usuario_id');
@@ -60,13 +62,6 @@ return new class extends Migration
             $table->foreign('mesa_id')->references('mesa_id')->on('mesa')->onDelete('cascade');
         });
 
-        Schema::create('permiso', function (Blueprint $table) {
-            $table->id('permiso_id'); 
-            $table->unsignedBigInteger('role_id');
-            $table->string('accion', 50);
-            $table->timestamps();
-            $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('cascade');
-        });
     }
 
     /**

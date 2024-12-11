@@ -11,12 +11,15 @@ class Mesa extends Model
 
     protected $primaryKey = 'mesa_id';
     protected $table = 'mesa';
+
     protected $fillable = ['numero_mesa', 'capacidad', 'restaurante_id', 'disponibilidad'];
 
     public function restaurante()
     {
         return $this->belongsTo(Restaurante::class, 'restaurante_id');
     }
+
+
 
     public function reservas()
     {
