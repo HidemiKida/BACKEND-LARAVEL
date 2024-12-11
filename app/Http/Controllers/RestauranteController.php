@@ -8,6 +8,26 @@ use Illuminate\Support\Facades\Auth;
 
 class RestauranteController extends Controller
 {
+    // Mostrar el restaurante asociado al usuario con rol 2
+    public function showRestauranteAsociado()
+    {
+        $user = Auth::user();
+
+        // Verificar que el usuario tenga el rol 2
+        if ($user->role_id != 2) {
+            return response()->json(['message' => 'No tienes permisos para ver esta información'], 403);
+        }
+
+        // Buscar el restaurante asociado al usuario
+        $restaurante = Restaurante::find($user->restaurante_id);
+
+        if (!$restaurante) {
+            return response()->json(['message' => 'No tienes un restaurante asociado'], 404);
+        }
+
+        return response()->json($restaurante);
+    }
+
     // Mostrar todos los restaurantes
     public function index()
     {
