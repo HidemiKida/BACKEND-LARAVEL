@@ -144,5 +144,36 @@ class ReservaController extends Controller
 
         return response()->json(['message' => 'Reserva eliminada con éxito']);
     }
+
+
+    public function cambiarEstado($reserva_id, Request $request)
+    {
+        $usuario = JWTAuth::parseToken()->authenticate();
+
+        // Verificar que el usuario sea administrador
+        if ($usuario->role_id !== 2) {
+            return response()->json(['error' => 'Acceso no autorizado'], 403);
+        }
+
+        $reserva = Reserva::where('reserva_id', $reserva_id)
+            ->whereHas('mesa', function ($query) use ($usuario) {
+                $query->where('restaurante_id', $usuario->restaurante_id);
+            })
+            ->first();
+
+        if (!$reserva) {
+            return response()->json(['error' => 'Reserva no encontrada o no pertenece a su restaurante'], 404);
+        }
+
+        $request->validate([
+            'estado' => 'required|string|max:255',
+        ]);
+
+        $reserva->estado = $request->estado;
+        $reserva->save();
+
+        return response()->json(['message' => 'Estado de la reserva actualizado con éxito']);
+    }
+
 }
 
