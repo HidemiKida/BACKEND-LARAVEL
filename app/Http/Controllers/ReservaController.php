@@ -85,6 +85,8 @@ class ReservaController extends Controller
         $reserva->estado = 'pendiente'; // Puedes usar un estado inicial
         $reserva->save();
 
+        $mesa->disponibilidad = false; // Marcar la mesa como no disponible
+        $mesa->save();
         return response()->json(['message' => 'Reserva realizada con éxito', 'reserva' => $reserva], 201);
     }
    

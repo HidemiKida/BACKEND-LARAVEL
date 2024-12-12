@@ -27,7 +27,7 @@ return new class extends Migration
         });
 
         Schema::create('usuarios', function (Blueprint $table) {
-            $table->id('usuario_id'); 
+            $table->id(column: 'usuario_id'); 
             $table->string('username', 50)->unique();
             $table->string('password', 255);
             $table->string('email', 100)->unique();
@@ -42,9 +42,7 @@ return new class extends Migration
             $table->id('mesa_id'); 
             $table->integer('numero_mesa');
             $table->integer('capacidad');
-
             $table->boolean('disponibilidad')->default(true);
-
             $table->unsignedBigInteger('restaurante_id');
             $table->timestamps();
             $table->foreign('restaurante_id')->references('restaurante_id')->on('restaurantes')->onDelete('cascade');
@@ -56,7 +54,7 @@ return new class extends Migration
             $table->unsignedBigInteger('usuario_id');
             $table->unsignedBigInteger('mesa_id');
             $table->timestamp('fecha_reserva'); 
-            $table->boolean('estado'); 
+            $table->string('estado'); 
             $table->timestamps();
             $table->foreign('usuario_id')->references('usuario_id')->on('usuarios')->onDelete('cascade');
             $table->foreign('mesa_id')->references('mesa_id')->on('mesa')->onDelete('cascade');
