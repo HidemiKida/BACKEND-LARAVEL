@@ -27,7 +27,7 @@ class AuthController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role_id' => 3,
+            'role_id' => 1,
         ]);
 
         // Generar el token JWT

@@ -7,7 +7,7 @@ services:
             dockerfile: dockerfile
         container_name: laravel_appvehiculo
         ports:
-            - "8000:8000" # Usa el puerto 8000 como en tu configuración previa
+            - "9000:9000" # Usa el puerto 8000 como en tu configuración previa
         working_dir: /var/www
         volumes:
             - .:/var/www
